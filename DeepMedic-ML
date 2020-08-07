@@ -1,0 +1,145 @@
+tempLayers = [
+    image3dInputLayer([19 19 19 3],"Name","3dLowRes")
+    batchNormalizationLayer("Name","batchnorm_4")
+    reluLayer("Name","relu_4")
+    convolution3dLayer([17 17 17],30,"Name","conv3d_5","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_5")
+    reluLayer("Name","relu_5")
+    convolution3dLayer([15 15 15],30,"Name","conv3d_6","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    image3dInputLayer([25 25 25 3],"Name","3dHighRes")
+    batchNormalizationLayer("Name","batchnorm_1")
+    reluLayer("Name","relu_1")
+    convolution3dLayer([23 23 23],30,"Name","conv3d_1","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_2")
+    reluLayer("Name","relu_2")
+    convolution3dLayer([21 21 21],30,"Name","conv3d_2","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_3")
+    reluLayer("Name","relu_3")
+    convolution3dLayer([19 19 19],40,"Name","conv3d_3","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_13")
+    reluLayer("Name","relu_13")
+    convolution3dLayer([17 17 17],40,"Name","conv3d_14","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_6")
+    reluLayer("Name","relu_6")
+    convolution3dLayer([13 13 13],40,"Name","conv3d_4","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_8")
+    reluLayer("Name","relu_8")
+    convolution3dLayer([11 11 11],40,"Name","conv3d_8","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = additionLayer(2,"Name","addition_1");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_9")
+    reluLayer("Name","relu_9")
+    convolution3dLayer([9 9 9],40,"Name","conv3d_9","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_10")
+    reluLayer("Name","relu_10")
+    convolution3dLayer([7 7 7],40,"Name","conv3d_10","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = additionLayer(2,"Name","addition_3");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_11")
+    reluLayer("Name","relu_11")
+    convolution3dLayer([5 5 5],50,"Name","conv3d_11","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_12")
+    reluLayer("Name","relu_12")
+    convolution3dLayer([3 3 3],50,"Name","conv3d_12","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    additionLayer(2,"Name","addition_5")
+    transposedConv3dLayer([9 9 9],50,"Name","upsample","BiasLearnRateFactor",0,"Cropping","same","WeightL2Factor",0,"WeightLearnRateFactor",0)];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = additionLayer(2,"Name","addition_2");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_14")
+    reluLayer("Name","relu_14")
+    convolution3dLayer([15 15 15],40,"Name","conv3d_15","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_15")
+    reluLayer("Name","relu_15")
+    convolution3dLayer([13 13 13],40,"Name","conv3d_16","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = additionLayer(2,"Name","addition_4");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_16")
+    reluLayer("Name","relu_16")
+    convolution3dLayer([11 11 11],50,"Name","conv3d_17","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_17")
+    reluLayer("Name","relu_17")
+    convolution3dLayer([9 9 9],50,"Name","conv3d_13","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = additionLayer(2,"Name","addition_6");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = concatenationLayer(3,2,"Name","concat");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    batchNormalizationLayer("Name","batchnorm_7")
+    reluLayer("Name","relu_7")
+    convolution3dLayer([9 9 9],150,"Name","conv3d_7","Padding","same")
+    fullyConnectedLayer(10,"Name","fc_2")
+    batchNormalizationLayer("Name","batchnorm_18")
+    reluLayer("Name","relu_18")
+    convolution3dLayer([9 9 9],150,"Name","conv3d_18","Padding","same")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    additionLayer(2,"Name","addition_7")
+    fullyConnectedLayer(10,"Name","fc_1")
+    softmaxLayer("Name","softmax")
+    dicePixelClassificationLayer("Name","dice-pixel-class")];
+lgraph = addLayers(lgraph,tempLayers);
+
+% clean up helper variable
+clear tempLayers;
+
+
+%connect layers
+lgraph = connectLayers(lgraph,"conv3d_2","batchnorm_3");
+lgraph = connectLayers(lgraph,"conv3d_2","addition_2/in2");
+lgraph = connectLayers(lgraph,"conv3d_6","batchnorm_6");
+lgraph = connectLayers(lgraph,"conv3d_6","addition_1/in2");
+lgraph = connectLayers(lgraph,"conv3d_8","addition_1/in1");
+lgraph = connectLayers(lgraph,"addition_1","batchnorm_9");
+lgraph = connectLayers(lgraph,"addition_1","addition_3/in2");
+lgraph = connectLayers(lgraph,"conv3d_10","addition_3/in1");
+lgraph = connectLayers(lgraph,"addition_3","batchnorm_11");
+lgraph = connectLayers(lgraph,"addition_3","addition_5/in2");
+lgraph = connectLayers(lgraph,"conv3d_12","addition_5/in1");
+lgraph = connectLayers(lgraph,"upsample","concat/in2");
+lgraph = connectLayers(lgraph,"conv3d_14","addition_2/in1");
+lgraph = connectLayers(lgraph,"addition_2","batchnorm_14");
+lgraph = connectLayers(lgraph,"addition_2","addition_4/in2");
+lgraph = connectLayers(lgraph,"conv3d_16","addition_4/in1");
+lgraph = connectLayers(lgraph,"addition_4","batchnorm_16");
+lgraph = connectLayers(lgraph,"addition_4","addition_6/in2");
+lgraph = connectLayers(lgraph,"conv3d_13","addition_6/in1");
+lgraph = connectLayers(lgraph,"addition_6","concat/in1");
+lgraph = connectLayers(lgraph,"concat","batchnorm_7");
+lgraph = connectLayers(lgraph,"concat","addition_7/in1");
+lgraph = connectLayers(lgraph,"conv3d_18","addition_7/in2");
+
+
+plot(lgraph);
