@@ -1,4 +1,3 @@
-%define n as number of channels
 n = 1;
 %% Create Layer Graph
 % Create the layer graph variable to contain the network layers.
@@ -69,8 +68,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_4")
     reluLayer("Name","relu_Module4_Level2")
-    transposedConv3dLayer([2 2 2],256,"Name","transConv_Module4","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
-lgraph = addLayers(lgraph,tempLayers);
+    upsample3dLayer([2 2 2],256,"Name","upsample_Module4","Stride",[2 2 2])];lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
     concatenationLayer(3,2,"Name","concat_3")
@@ -85,7 +83,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_6")
     reluLayer("Name","relu_Module5_Level2")
-    transposedConv3dLayer([2 2 2],128,"Name","transConv_Module5","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
+    upsample3dLayer([2 2 2],128,"Name","upsample_Module5","Stride",[2 2 2])];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -101,7 +99,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_8")
     reluLayer("Name","relu_Module6_Level2")
-    transposedConv3dLayer([2 2 2],64,"Name","transConv_Module6","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
+    upsample3dLayer([2 2 2],64,"Name","upsample_Module6","Stride",[2 2 2])];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
