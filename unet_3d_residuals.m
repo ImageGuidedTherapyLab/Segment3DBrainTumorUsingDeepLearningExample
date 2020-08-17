@@ -69,11 +69,11 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_4")
     reluLayer("Name","relu_Module4_Level2")
-    transposedConv3dLayer([2 2 2],512,"Name","transConv_Module4","Stride",[2 2 2])];
+    transposedConv3dLayer([2 2 2],256,"Name","transConv_Module4","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(4,2,"Name","concat_3")
+    concatenationLayer(3,2,"Name","concat_3")
     convolution3dLayer([3 3 3],256,"Name","conv_Module5_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
@@ -85,11 +85,11 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_6")
     reluLayer("Name","relu_Module5_Level2")
-    transposedConv3dLayer([2 2 2],256,"Name","transConv_Module5","Stride",[2 2 2])];
+    transposedConv3dLayer([2 2 2],128,"Name","transConv_Module5","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(4,2,"Name","concat_2")
+    concatenationLayer(3,2,"Name","concat_2")
     convolution3dLayer([3 3 3],128,"Name","conv_Module6_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
@@ -101,11 +101,11 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_8")
     reluLayer("Name","relu_Module6_Level2")
-    transposedConv3dLayer([2 2 2],128,"Name","transConv_Module6","Stride",[2 2 2])];
+    transposedConv3dLayer([2 2 2],64,"Name","transConv_Module6","BiasLearnRateFactor",0,"Stride",[2 2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(4,2,"Name","concat_1")
+    concatenationLayer(3,2,"Name","concat_1")
     convolution3dLayer([3 3 3],64,"Name","conv_Module7_Level1","Padding","same")];
 lgraph = addLayers(lgraph,tempLayers);
 
