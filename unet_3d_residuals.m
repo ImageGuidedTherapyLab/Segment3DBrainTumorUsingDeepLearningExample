@@ -71,7 +71,7 @@ tempLayers = [
     upsample3dLayer([2 2 2],256,"Name","upsample_Module4","Stride",[2 2 2])];lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(3,2,"Name","concat_3")
+    concatenationLayer(4,2,"Name","concat_3")
     convolution3dLayer([3 3 3],256,"Name","conv_Module5_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
@@ -87,7 +87,7 @@ tempLayers = [
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(3,2,"Name","concat_2")
+    concatenationLayer(4,2,"Name","concat_2")
     convolution3dLayer([3 3 3],128,"Name","conv_Module6_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
@@ -103,7 +103,7 @@ tempLayers = [
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
-    concatenationLayer(3,2,"Name","concat_1")
+    concatenationLayer(4,2,"Name","concat_1")
     convolution3dLayer([3 3 3],64,"Name","conv_Module7_Level1","Padding","same")];
 lgraph = addLayers(lgraph,tempLayers);
 
