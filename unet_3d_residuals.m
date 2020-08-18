@@ -1,3 +1,4 @@
+%define n as number of channels
 n = 1;
 %% Create Layer Graph
 % Create the layer graph variable to contain the network layers.
@@ -68,7 +69,8 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     additionLayer(2,"Name","addition_4")
     reluLayer("Name","relu_Module4_Level2")
-    upsample3dLayer([2 2 2],256,"Name","upsample_Module4","Stride",[2 2 2])];lgraph = addLayers(lgraph,tempLayers);
+    upsample3dLayer([2 2 2],256,"Name","upsample_Module4","Stride",[2 2 2])];
+lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
     concatenationLayer(4,2,"Name","concat_3")
@@ -143,18 +145,19 @@ lgraph = connectLayers(lgraph,"relu_Module3_Level2","concat_3/in2");
 lgraph = connectLayers(lgraph,"conv_Module4_Level1","relu_Module4_Level1");
 lgraph = connectLayers(lgraph,"conv_Module4_Level1","addition_4/in1");
 lgraph = connectLayers(lgraph,"conv_Module4_Level2","addition_4/in2");
-lgraph = connectLayers(lgraph,"transConv_Module4","concat_3/in1");
+lgraph = connectLayers(lgraph,"upsample_Module4","concat_3/in1");
 lgraph = connectLayers(lgraph,"conv_Module5_Level1","relu_Module5_Level1");
 lgraph = connectLayers(lgraph,"conv_Module5_Level1","addition_6/in2");
 lgraph = connectLayers(lgraph,"conv_Module5_Level2","addition_6/in1");
-lgraph = connectLayers(lgraph,"transConv_Module5","concat_2/in1");
+lgraph = connectLayers(lgraph,"upsample_Module5","concat_2/in1");
 lgraph = connectLayers(lgraph,"conv_Module6_Level1","relu_Module6_Level1");
 lgraph = connectLayers(lgraph,"conv_Module6_Level1","addition_8/in1");
 lgraph = connectLayers(lgraph,"conv_Module6_Level2","addition_8/in2");
-lgraph = connectLayers(lgraph,"transConv_Module6","concat_1/in1");
+lgraph = connectLayers(lgraph,"upsample_Module6","concat_1/in1");
 lgraph = connectLayers(lgraph,"conv_Module7_Level1","relu_Module7_Level1");
 lgraph = connectLayers(lgraph,"conv_Module7_Level1","addition_10/in1");
 lgraph = connectLayers(lgraph,"conv_Module7_Level2","addition_10/in2");
 %% Plot Layers
 
 plot(lgraph);
+
