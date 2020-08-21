@@ -1,0 +1,67 @@
+%fresh start
+clc
+clear all
+close all
+
+gpuDevice(2)
+
+
+% brats training and validation dataset locations
+trImLoc = fullfile('/tmp/BraTS/preprocessedDataset/imagesTr');
+valImLoc = fullfile('/tmp/BraTS/preprocessedDataset/imagesVal');
+
+TrLblLoc = fullfile('/tmp/BraTS/preprocessedDataset/labelsTr');
+valLblLoc = fullfile('/tmp/BraTS/preprocessedDataset/labelsVal');
+
+ % define readers
+maskReader = @(x) (niftiread(x)>0);
+volReader = @(x) niftiread(x);
+procvolReader = @(x) matRead(x);
+
+%%
+% store in datastores
+trImgDs = imageDatastore(trImLoc,'FileExtensions','.mat','ReadFcn',procvolReader)
+trpxlDs = pixelLabelDatastore(TrLblLoc,["background","tumor"],[0 1],'FileExtensions','.mat', 'ReadFcn',procvolReader )
+
+valImgDs = imageDatastore(valImLoc,'FileExtensions','.mat','ReadFcn',procvolReader)
+valpxlDs = pixelLabelDatastore(valLblLoc,["background","tumor"],[0 1],'FileExtensions','.mat','ReadFcn',procvolReader)
+%%
+
+% Need Random Patch Extraction on testing and validation Data
+patchSize = [57 57 57];
+patchPerImage = 25;
+miniBatchSize = 8;
+  %training patch datastore
+trpatchds = randomPatchExtractionDatastore(trImgDs,trpxlDs,patchSize, ...
+    'PatchesPerImage',patchPerImage);
+trpatchds.MiniBatchSize = miniBatchSize;
+  %validation patch datastore
+dsVal = randomPatchExtractionDatastore(valImgDs,valpxlDs,patchSize, ...
+    'PatchesPerImage',patchPerImage);
+dsVal.MiniBatchSize = miniBatchSize;
+
+% before starting, need to define "n" which is the number of channels.
+n = 4;
+
+%% paste network layers
+
+
+%% set training options
+options = trainingOptions('adam', ...
+    'MaxEpochs',35, ...
+    'InitialLearnRate',5e-4, ...
+    'LearnRateSchedule','piecewise', ...
+    'LearnRateDropPeriod',5, ...
+    'LearnRateDropFactor',0.95, ...
+    'ValidationData',dsVal, ...
+    'ValidationFrequency',400, ...
+    'Plots','training-progress', ...
+    'Verbose',false, ...
+    'MiniBatchSize',miniBatchSize);
+
+
+%Train
+modelDateTime = datestr(now,'dd-mmm-yyyy-HH-MM-SS');
+[net,info] = trainNetwork(trpatchds,lgraph,options);
+save(['trainedDeepMedic' modelDateTime '-Epoch-' num2str(maxEpochs) '.mat'],'net');
+
