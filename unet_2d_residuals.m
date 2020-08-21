@@ -10,7 +10,7 @@ lgraph = layerGraph();
 tempLayers = [
     imageInputLayer([64 64 n],"Name","input","Normalization","none")
     batchNormalizationLayer("Name","BN_Module1_Level1")
-    convolution2dLayer([3 3],32,"Name","conv_Module1_Level1","Padding","same","WeightsInitializer","narrow-normal")];
+    convolution2dLayer([3 3],64,"Name","conv_Module1_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -27,7 +27,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     maxPooling2dLayer([2 2],"Name","maxpool_Module1","Padding","same","Stride",[2 2])
     batchNormalizationLayer("Name","BN_Module2_Level1")
-    convolution2dLayer([3 3],64,"Name","conv_Module2_Level1","Padding","same","WeightsInitializer","narrow-normal")];
+    convolution2dLayer([3 3],128,"Name","conv_Module2_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -44,7 +44,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     maxPooling2dLayer([2 2],"Name","maxpool_Module2","Padding","same","Stride",[2 2])
     batchNormalizationLayer("Name","BN_Module3_Level1")
-    convolution2dLayer([3 3],128,"Name","conv_Module3_Level1","Padding","same","WeightsInitializer","narrow-normal")];
+    convolution2dLayer([3 3],256,"Name","conv_Module3_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -61,7 +61,7 @@ lgraph = addLayers(lgraph,tempLayers);
 tempLayers = [
     maxPooling2dLayer([2 2],"Name","maxpool_Module3","Padding","same","Stride",[2 2])
     batchNormalizationLayer("Name","BN_Module4_Level1")
-    convolution2dLayer([3 3],256,"Name","conv_Module4_Level1","Padding","same","WeightsInitializer","narrow-normal")];
+    convolution2dLayer([3 3],512,"Name","conv_Module4_Level1","Padding","same","WeightsInitializer","narrow-normal")];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -171,3 +171,4 @@ lgraph = connectLayers(lgraph,"conv_Module7_Level2","addition_10/in2");
 %% Plot Layers
 
 plot(lgraph);
+

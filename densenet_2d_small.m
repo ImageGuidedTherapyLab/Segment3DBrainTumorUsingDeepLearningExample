@@ -70,7 +70,7 @@ lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
     depthConcatenationLayer(2,"Name","depthcat_5")
-    transposedConv2dLayer([2 2],80,"Name","transConv_Module4","BiasLearnRateFactor",0,"Stride",[2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
+    upsample2dLayer([2 2],80,"Name","upsample_Module4","Stride",[2 2])];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -88,7 +88,7 @@ lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
     depthConcatenationLayer(2,"Name","depthcat_7")
-    transposedConv2dLayer([2 2],68,"Name","transConv_Module5","BiasLearnRateFactor",0,"Stride",[2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
+    upsample2dLayer([2 2],68,"Name","upsample_Module5","Stride",[2 2])];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -106,7 +106,7 @@ lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
     depthConcatenationLayer(2,"Name","depthcat_8")
-    transposedConv2dLayer([2 2],56,"Name","transConv_Module6","BiasLearnRateFactor",0,"Stride",[2 2],"WeightLearnRateFactor",0,"WeightsInitializer","ones")];
+    upsample2dLayer([2 2],56,"Name","upsample_Module6","Stride",[2 2])];
 lgraph = addLayers(lgraph,tempLayers);
 
 tempLayers = [
@@ -153,15 +153,15 @@ lgraph = connectLayers(lgraph,"depthcat_3","depthcat_4/in1");
 lgraph = connectLayers(lgraph,"relu_Module4_Level1","BN_Module4_Level2");
 lgraph = connectLayers(lgraph,"relu_Module4_Level1","depthcat_5/in2");
 lgraph = connectLayers(lgraph,"relu_Module4_Level2","depthcat_5/in1");
-lgraph = connectLayers(lgraph,"transConv_Module4","depthcat_4/in2");
+lgraph = connectLayers(lgraph,"upsample_Module4","depthcat_4/in2");
 lgraph = connectLayers(lgraph,"relu_Module5_Level1","BN_Module5_Level2");
 lgraph = connectLayers(lgraph,"relu_Module5_Level1","depthcat_7/in1");
 lgraph = connectLayers(lgraph,"relu_Module5_Level2","depthcat_7/in2");
-lgraph = connectLayers(lgraph,"transConv_Module5","depthcat_6/in1");
+lgraph = connectLayers(lgraph,"upsample_Module5","depthcat_6/in1");
 lgraph = connectLayers(lgraph,"relu_Module6_Level1","BN_Module6_Level2");
 lgraph = connectLayers(lgraph,"relu_Module6_Level1","depthcat_8/in1");
 lgraph = connectLayers(lgraph,"relu_Module6_Level2","depthcat_8/in2");
-lgraph = connectLayers(lgraph,"transConv_Module6","depthcat_9/in2");
+lgraph = connectLayers(lgraph,"upsample_Module6","depthcat_9/in2");
 lgraph = connectLayers(lgraph,"relu_Module7_Level1","BN_Module7_Level2");
 lgraph = connectLayers(lgraph,"relu_Module7_Level1","depthcat_10/in1");
 lgraph = connectLayers(lgraph,"relu_Module7_Level2","depthcat_10/in2");
