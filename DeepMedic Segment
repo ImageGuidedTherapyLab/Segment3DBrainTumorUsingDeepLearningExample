@@ -1,0 +1,93 @@
+% create network object
+lgraph = layerGraph();
+
+% create layers
+tempLayers = image3dInputLayer([57 57 57 4],"Name","image3dinput");
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = convolution3dLayer([17 17 17],1,"Name","CropSizeAdjuster","BiasLearnRateFactor",0,"Padding",[4 4 4;4 4 4],"Stride",[2 2 2],"WeightL2Factor",0,"WeightLearnRateFactor",0);
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    averagePooling3dLayer([3 3 3],"Name","avgpool3d","Stride",[3 3 3])
+    batchNormalizationLayer("Name","batchnorm_4")
+    reluLayer("Name","relu_4")
+    convolution3dLayer([3 3 3],30,"Name","conv3d_5")
+    batchNormalizationLayer("Name","batchnorm_5")
+    reluLayer("Name","relu_5")
+    convolution3dLayer([3 3 3],30,"Name","conv3d_6")
+    batchNormalizationLayer("Name","batchnorm_6")
+    reluLayer("Name","relu_6")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_4")
+    batchNormalizationLayer("Name","batchnorm_8")
+    reluLayer("Name","relu_7")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_8")
+    batchNormalizationLayer("Name","batchnorm_9")
+    reluLayer("Name","relu_8")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_9")
+    batchNormalizationLayer("Name","batchnorm_10")
+    reluLayer("Name","relu_9")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_10")
+    batchNormalizationLayer("Name","batchnorm_11")
+    reluLayer("Name","relu_10")
+    convolution3dLayer([3 3 3],50,"Name","conv3d_11")
+    batchNormalizationLayer("Name","batchnorm_12")
+    reluLayer("Name","relu_11")
+    convolution3dLayer([3 3 3],50,"Name","conv3d_12")
+    transposedConv3dLayer([7 7 7],50,"Name","upsample","BiasLearnRateFactor",0,"WeightL2Factor",0,"WeightLearnRateFactor",0)];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    crop3dLayer("Name","crop3d")
+    batchNormalizationLayer("Name","batchnorm_1")
+    reluLayer("Name","relu_1")
+    convolution3dLayer([3 3 3],30,"Name","conv3d_1")
+    batchNormalizationLayer("Name","batchnorm_2")
+    reluLayer("Name","relu_2")
+    convolution3dLayer([3 3 3],30,"Name","conv3d_2")
+    batchNormalizationLayer("Name","batchnorm_3")
+    reluLayer("Name","relu_3")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_3")
+    batchNormalizationLayer("Name","batchnorm_13")
+    reluLayer("Name","relu_12")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_14")
+    batchNormalizationLayer("Name","batchnorm_14")
+    reluLayer("Name","relu_13")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_15")
+    batchNormalizationLayer("Name","batchnorm_15")
+    reluLayer("Name","relu_14")
+    convolution3dLayer([3 3 3],40,"Name","conv3d_16")
+    batchNormalizationLayer("Name","batchnorm_16")
+    reluLayer("Name","relu_15")
+    convolution3dLayer([3 3 3],50,"Name","conv3d_17")
+    batchNormalizationLayer("Name","batchnorm_17")
+    reluLayer("Name","relu_16")
+    convolution3dLayer([3 3 3],50,"Name","conv3d_13")];
+lgraph = addLayers(lgraph,tempLayers);
+
+tempLayers = [
+    concatenationLayer(4,2,"Name","concat")
+    batchNormalizationLayer("Name","batchnorm_7")
+    reluLayer("Name","relu_17")
+    convolution3dLayer([1 1 1],150,"Name","conv3d_7")
+    batchNormalizationLayer("Name","batchnorm_18")
+    reluLayer("Name","relu_19")
+    convolution3dLayer([1 1 1],150,"Name","conv3d_18","BiasLearnRateFactor",0)
+    batchNormalizationLayer("Name","batchnorm")
+    convolution3dLayer([1 1 1],2,"Name","conv3d")
+    softmaxLayer("Name","softmax")
+    dicePixelClassificationLayer("Name","dice-pixel-class")];
+lgraph = addLayers(lgraph,tempLayers);
+
+% clean up helper variable
+clear tempLayers;
+
+% connect layers
+lgraph = connectLayers(lgraph,"image3dinput","CropSizeAdjuster");
+lgraph = connectLayers(lgraph,"image3dinput","avgpool3d");
+lgraph = connectLayers(lgraph,"image3dinput","crop3d/in");
+lgraph = connectLayers(lgraph,"CropSizeAdjuster","crop3d/ref");
+lgraph = connectLayers(lgraph,"conv3d_13","concat/in2");
+lgraph = connectLayers(lgraph,"upsample","concat/in1");
+
+plot(lgraph);
