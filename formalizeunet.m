@@ -1,4 +1,28 @@
 % created from https://www.mathworks.com/help/images/segment-3d-brain-tumor-using-deep-learning.html
+% >> ver -support
+% -----------------------------------------------------------------------------------------------------
+% MATLAB Version: 9.8.0.1417392 (R2020a) Update 4
+% MATLAB License Number: 68666
+% Operating System: Linux 4.4.0-127-generic #153-Ubuntu SMP Sat May 19 10:58:46 UTC 2018 x86_64
+% Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+% -----------------------------------------------------------------------------------------------------
+% MATLAB                                                Version 9.8         (R2020a)      License 68666
+% Simulink                                              Version 10.1        (R2020a)      License 68666
+% Bioinformatics Toolbox                                Version 4.14        (R2020a)      License 68666
+% Computer Vision Toolbox                               Version 9.2         (R2020a)      License 68666
+% Curve Fitting Toolbox                                 Version 3.5.11      (R2020a)      License 68666
+% Deep Learning Toolbox                                 Version 14.0        (R2020a)      License 68666
+% Image Acquisition Toolbox                             Version 6.2         (R2020a)      License 68666
+% Image Processing Toolbox                              Version 11.1        (R2020a)      License 68666
+% MATLAB Compiler                                       Version 8.0         (R2020a)      License 68666
+% MATLAB Compiler SDK                                   Version 6.8         (R2020a)      License 68666
+% Optimization Toolbox                                  Version 8.5         (R2020a)      License 68666
+% Parallel Computing Toolbox                            Version 7.2         (R2020a)      License 68666
+% Signal Processing Toolbox                             Version 8.4         (R2020a)      License 68666
+% Statistics and Machine Learning Toolbox               Version 11.7        (R2020a)      License 68666
+% Symbolic Math Toolbox                                 Version 8.5         (R2020a)      License 68666
+% Wavelet Toolbox                                       Version 5.4         (R2020a)      License 68666
+% 
 % references:
 %    https://www.mathworks.com/matlabcentral/answers/427468-how-does-semanticseg-command-work-on-images-larger-than-what-the-network-was-trained-with
 %    https://www.mathworks.com/help/deeplearning/ref/activations.html
@@ -66,7 +90,8 @@ id=1;
 while hasdata(voldsTest)
     disp(['Processing test volume ' num2str(id)])
     
-    groundTruthLabels{id} = read(pxdsTest);
+    tempGroundTruth = read(pxdsTest);
+    groundTruthLabels{id} =  tempGroundTruth{1};
     
     vol{id} = read(voldsTest);
     tempSeg = semanticseg(vol{id},net);
