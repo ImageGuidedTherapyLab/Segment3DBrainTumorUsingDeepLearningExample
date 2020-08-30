@@ -331,12 +331,12 @@ beta = 2 % find non-zero channel
 y1   = convM2L1(:,:,:,beta);
 y2   = bnFeaturesM2L1(:,:,:,beta); 
 y3   = reluM2L1(:,:,:,beta); 
-beta = 55 % find non-zero channel 
-x1   = reluM2L2(:,:,:,beta); 
-m2   = maxpoolM2(:,:,:,beta); 
 trainedVariance   = net.Layers(8).TrainedVariance(:,:,:,beta) ;
 trainedMean       = net.Layers(8).TrainedMean(:,:,:,beta);
 trainedScale      = net.Layers(8).Scale(:,:,:,beta);
 trainedOffset     = net.Layers(8).Offset(:,:,:,beta);
+betamp = 55 % find non-zero channel 
+x1   = reluM2L2(:,:,:,betamp); 
+m2   = maxpoolM2(:,:,:,betamp); 
 save('nnWorkspace.mat','y1', 'y2', 'y3', 'x1','m2','trainedMean', 'trainedVariance','trainedScale', 'trainedOffset')
 
