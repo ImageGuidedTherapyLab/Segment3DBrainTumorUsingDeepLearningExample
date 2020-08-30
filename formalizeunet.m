@@ -49,6 +49,7 @@ downloadTrained3DUnetSampleData(trained3DUnet_url,sampleData_url,imageDir);
 
 % return a pretrained 3-D U-Net network.
 load(fullfile(imageDir,'trained3DUNet','brainTumor3DUNet.mat'));
+analyzeNetwork(net)
 
 % You can now use the U-Net to semantically segment brain tumors.
 %% Perform Segmentation of Test Data
@@ -249,26 +250,24 @@ orignii = make_nii(originalFeatures,[],[],[],'original');
 save_nii(orignii,'original.nii' ) ;
 
 % features after first convolution
-layername = 'conv_Module1_Level1';
-convFeatures = activations(net,vol{volId},layername );
-convnii = make_nii(convFeatures ,[],[],[],'convolution');
+layername = 'conv_Module2_Level1';
+convM2L1 = activations(net,vol{volId},layername );
+convnii = make_nii(convM2L1 ,[],[],[],'convolution');
 save_nii(convnii,'convolution.nii' ) ;
 
 % features after first batch normalization
-layername = 'BN_Module1_Level1'
-bnFeatures = activations(net,vol{volId},layername );
-
-% features after level 2 convolution in module 1
-layername = 'conv_Module1_Level2'  
-convlevel2Features = activations(net,vol{volId},layername );
+layername = 'BN_Module2_Level1'
+bnFeaturesM2L1 = activations(net,vol{volId},layername );
 
 % relu features 
-layername = 'relu_Module1_Level2'  
-relulevel2Features = activations(net,vol{volId},layername );
+layername = 'relu_Module2_Level1'  
+reluM2L1 = activations(net,vol{volId},layername );
+layername = 'relu_Module2_Level2'  
+reluM2L2 = activations(net,vol{volId},layername );
 
 % max pool 
-layername = 'maxpool_Module1'      
-maxpoolFeatures = activations(net,vol{volId},layername );
+layername = 'maxpool_Module2'      
+maxpoolM2 = activations(net,vol{volId},layername );
 
 % input/output to transpose convolution layer
 layername  = 'relu_Module6_Level2'
@@ -325,3 +324,19 @@ save_nii(segnii,'output.nii' ) ;
 
 % view output
 % vglrun itksnap -g original.nii -s output.nii -o convolution.nii lastrelu.nii lastconv.nii softmax.nii 
+
+
+% setup homework exercise
+beta = 2 % find non-zero channel
+y1   = convM2L1(:,:,:,beta);
+y2   = bnFeaturesM2L1(:,:,:,beta); 
+y3   = reluM2L1(:,:,:,beta); 
+beta = 55 % find non-zero channel 
+x1   = reluM2L2(:,:,:,beta); 
+m1   = maxpoolM2(:,:,:,beta); 
+trainedVariance   = net.Layers(8).TrainedVariance(:,:,:,beta) ;
+trainedMean       = net.Layers(8).TrainedMean(:,:,:,beta);
+trainedScale      = net.Layers(8).Scale(:,:,:,beta);
+trainedOffset     = net.Layers(8).Offset(:,:,:,beta);
+save('nnWorkspace.mat','y1', 'y2', 'y3', 'x1','m1','trainedMean', 'trainedVariance','trainedScale', 'trainedOffset')
+
