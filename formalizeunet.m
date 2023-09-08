@@ -49,6 +49,7 @@ downloadTrained3DUnetSampleData(trained3DUnet_url,sampleData_url,imageDir);
 
 % return a pretrained 3-D U-Net network.
 load(fullfile(imageDir,'trained3DUNet','brainTumor3DUNet.mat'));
+connector.ensureServiceOn;
 analyzeNetwork(net)
 
 % You can now use the U-Net to semantically segment brain tumors.
